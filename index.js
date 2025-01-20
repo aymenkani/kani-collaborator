@@ -17,7 +17,7 @@ app.use((req, res, next) => {
 
   // Log the request data to a file
   const logFilePath = path.join(__dirname, 'request_logs.txt');
-  const logText = `${logEntry.timestamp} - ${logEntry.method} ${logEntry.url} - Domain: ${logEntry.domain} - IP: ${logEntry.ip} - Headers: ${JSON.stringify(logEntry.headers)} - Cookies: ${JSON.stringify(logEntry.cookies)}\n`;
+  const logText = `\n${logEntry.timestamp} - ${logEntry.method} ${logEntry.url} - Domain: ${logEntry.domain} - IP: ${logEntry.ip} - Headers: ${JSON.stringify(logEntry.headers)} - Cookies: ${JSON.stringify(logEntry.cookies)}\n`;
 
   // Append the log entry to the file
   fs.appendFile(logFilePath, logText, (err) => {
@@ -32,7 +32,7 @@ app.use((req, res, next) => {
 
 app.get('/image.png', (req, res) => {
   // Serve JavaScript instead of an image
-  res.setHeader('Content-Type', 'application/javascript');
+  res.setHeader('Content-Type', 'image/png');
   res.send('alert("This is not an image!");');
 });
 
