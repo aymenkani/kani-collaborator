@@ -63,6 +63,34 @@ app.get('/image1.svg', (req, res) => {
 </svg>`);
 });
 
+app.get('/image-h.svg', (req, res) => {
+  // Serve JavaScript instead of an image
+  res.setHeader('Content-Type', 'image/svg+xml');
+  res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
+  res.send(`<svg xmlns="http://www.w3.org/2000/svg">
+  <metadata>
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval';">
+  </meta>
+  </metadata>
+  <script>
+    alert('Injected Script Executed!');
+  </script>
+</svg>`);
+});
+
+app.get('/image-inject-dom.svg', (req, res) => {
+  // Serve JavaScript instead of an image
+  res.setHeader('Content-Type', 'image/svg+xml');
+  res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
+  res.send(`<svg xmlns="http://www.w3.org/2000/svg">
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      alert('aymen el kani');
+    });
+  </script>
+</svg>`);
+});
+
 app.get('/image2.svg', (req, res) => {
   // Serve JavaScript instead of an image
   res.setHeader('Content-Type', 'image/svg+xml');
