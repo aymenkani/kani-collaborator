@@ -30,6 +30,13 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get('/image.png', (req, res) => {
+  // Serve JavaScript instead of an image
+  res.setHeader('Content-Type', 'application/javascript');
+  res.send('alert("This is not an image!");');
+});
+
+
 // Serve the request_logs.txt file as a static file (accessible at /logs/request_logs.txt)
 app.use('/logs', express.static(path.join(__dirname, '/')));
 
