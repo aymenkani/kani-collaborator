@@ -30,10 +30,14 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/image.png', (req, res) => {
+app.get('/image.svg', (req, res) => {
   // Serve JavaScript instead of an image
-  res.setHeader('Content-Type', 'image/png');
-  res.send('alert("This is not an image!");');
+  res.setHeader('Content-Type', 'image/svg+xml');
+  res.send(`<svg xmlns="http://www.w3.org/2000/svg">
+  <script>
+    alert("This is a script in an SVG!");
+  </script>
+</svg>`);
 });
 
 
