@@ -3,6 +3,9 @@ const fs = require('fs');
 const path = require('path');
 const app = express();
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // Middleware to capture every incoming request
 app.use((req, res, next) => {
   const logEntry = {
@@ -28,6 +31,28 @@ app.use((req, res, next) => {
 
   // Continue to the next middleware or route handler
   next();
+});
+
+app.get("/dynamic", (req, res) => {
+    // Extract query parameters
+    const queryParams = req.query;
+
+    // Extract and set headers from query parameters
+    Object.keys(queryParams).forEach((key) => {
+        if (key.startsWith("header-")) {
+            const headerName = key.replace("header-", "").replace(/-/g, " ");
+            res.setHeader(headerName, queryParams[key]);
+        }
+    });
+
+    // Extract the response status code, default to 200
+    const statusCode = parseInt(queryParams["response-statuscode"]) || 200;
+
+    // Extract response data
+    const data = queryParams["data"] || "";
+
+    // Send the response with the provided status code
+    res.status(statusCode).send(data);
 });
 
 app.get('/not-image.jpg', (req, res) => {
