@@ -30,6 +30,14 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get('/not-image.jpg', (req, res) => {
+  // Serve JavaScript instead of an image
+  res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
+  res.send(`
+    <img src="" tag="hi there" />
+  `);
+});
+
 app.get('/image0.svg', (req, res) => {
   // Serve JavaScript instead of an image
   res.setHeader('Content-Type', 'image/svg+xml');
