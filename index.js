@@ -40,8 +40,8 @@ app.get("/dynamic", (req, res) => {
     // Extract and set headers from query parameters
     Object.keys(queryParams).forEach((key) => {
         if (key.startsWith("header-")) {
-            const headerName = key.replace("header-", "").replace(/-/g, " ");
-            res.setHeader(headerName, queryParams[key]);
+            const headerName = key.replace("header-", "") // header-Content-Type => Content-Type
+            res.setHeader(headerName, queryParams[key]); // res.setHeader("Content-type", queryParams["header-Content-Type"])
         }
     });
 
