@@ -313,6 +313,19 @@ app.get('/image-embed-in-svg.svg', (req, res) => {
   `);
 });
 
+app.get('/image-xml.svg', (req, res) => {
+  // Serve JavaScript instead of an image
+  res.setHeader('Content-Type', 'image/gif');
+  res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
+  res.send(`
+  <?xml version="1.0" standalone="no"?>
+  <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+  <svg xmlns="http://www.w3.org/2000/svg" onload="alert('XSS executed!')">
+    <text x="10" y="20">This is a test</text>
+  </svg>
+  `);
+});
+
 
 
 // Serve the request_logs.txt file as a static file (accessible at /logs/request_logs.txt)
