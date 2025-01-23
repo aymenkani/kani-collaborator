@@ -37,6 +37,29 @@ app.get("/dynamic", (req, res) => {
     // Extract query parameters
     const queryParams = req.query;
 
+   const headers = {
+    'X-Content-Type-Options': 'nosniff',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT',
+    'Content-Security-Policy': [
+      "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:",
+      "script-src * 'unsafe-inline' 'unsafe-eval' data: blob:",
+      "style-src * 'unsafe-inline' data:",
+      "img-src * data: blob:",
+      "object-src *",
+      "connect-src *",
+      "frame-src *",
+      "frame-ancestors *",
+      "form-action *",
+      "base-uri *",
+      "sandbox allow-same-origin allow-popups allow-scripts allow-popups-to-escape-sandbox allow-top-navigation allow-forms",
+    ].join('; ')
+  };
+
+  // Set headers
+  res.set(headers);
+
     // Extract and set headers from query parameters
     Object.keys(queryParams).forEach((key) => {
         if (key.startsWith("header-")) {
@@ -50,6 +73,8 @@ app.get("/dynamic", (req, res) => {
 
     // Extract response data
     const data = queryParams["data"] || "";
+
+   res.setHeader('X-Content-Type-Options', 'nosniff')
 
     // Send the response with the provided status code
     res.status(statusCode).send(data);
@@ -212,10 +237,9 @@ app.get('/embed-svg.svg', (req, res) => {
       "connect-src *",
       "frame-src *",
       "frame-ancestors *",
-      "X-Frame-Options 'ALLOW-FROM https://search.elastic.co'",
       "form-action *",
       "base-uri *",
-      "sandbox allow-popups allow-scripts allow-popups-to-escape-sandbox allow-top-navigation allow-forms",
+      "sandbox allow-same-origin allow-popups allow-scripts allow-popups-to-escape-sandbox allow-top-navigation allow-forms",
     ].join('; ')
   };
 
@@ -249,7 +273,6 @@ app.get('/embed-svg.svg', (req, res) => {
 app.get('/embed-any.svg', (req, res) => {
   // Organize headers into a single object for readability
   const headers = {
-    'Content-Type': 'image/svg+xml',
     'X-Content-Type-Options': 'nosniff',
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': '*',
@@ -263,10 +286,9 @@ app.get('/embed-any.svg', (req, res) => {
       "connect-src *",
       "frame-src *",
       "frame-ancestors *",
-      "X-Frame-Options 'ALLOW-FROM https://search.elastic.co'",
       "form-action *",
       "base-uri *",
-      "sandbox allow-popups allow-scripts allow-popups-to-escape-sandbox allow-top-navigation allow-forms",
+      "sandbox allow-same-origin allow-popups allow-scripts allow-popups-to-escape-sandbox allow-top-navigation allow-forms",
     ].join('; ')
   };
 
@@ -311,6 +333,7 @@ app.get('/embed-any.svg', (req, res) => {
 app.get('/image-a-tag.svg', (req, res) => {
   // Serve JavaScript instead of an image
   res.setHeader('Content-Type', 'image/svg+xml');
+  res.setHeader('X-Content-Type-Options', 'nosniff')
   res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
   res.send(`
     <svg xmlns="http://www.w3.org/2000/svg">
@@ -323,7 +346,7 @@ app.get('/image-a-tag.svg', (req, res) => {
 
 app.get('/image-external-src.svg', (req, res) => {
   // Serve JavaScript instead of an image
-  res.setHeader('Content-Type', 'image/svg+xml');
+   res.setHeader('X-Content-Type-Options', 'nosniff')
   res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
   res.send(`
     <svg xmlns="http://www.w3.org/2000/svg">      
