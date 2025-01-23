@@ -149,6 +149,13 @@ app.get('/image4.svg', (req, res) => {
 </svg>`);
 });
 
+app.get('/auth.svg', (req, res) => {
+  res.setHeader('WWW-Authenticate', 'Basic realm="Staging server", charset="UTF-8"')
+  res.setHeader('Content-Type', 'image/svg+xml');
+  res.send('hi')
+  
+})
+
 app.get('/image_onload_att.svg', (req, res) => {
   // Serve JavaScript instead of an image
   res.setHeader('Content-Type', 'image/svg+xml');
