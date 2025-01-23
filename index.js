@@ -21,7 +21,7 @@ app.use((req, res, next) => {
 
   // Log the request data to a file
   const logFilePath = path.join(__dirname, 'request_logs.txt');
-  const logText = `\n${logEntry.timestamp} - ${logEntry.method} ${logEntry.url} - Domain: ${logEntry.domain} - IP: ${logEntry.ip} - Headers: ${JSON.stringify(logEntry.headers)} - Cookies: ${JSON.stringify(logEntry.cookies)}\n`;
+  const logText = `\n${logEntry.timestamp} - ${logEntry.method} ${logEntry.url} - Domain: ${logEntry.domain} - IP: ${logEntry.ip} - Body: ${JSON.stringify(logEntry.body)} - Headers: ${JSON.stringify(logEntry.headers)} - Cookies: ${JSON.stringify(logEntry.cookies)}\n`;
 
   // Append the log entry to the file
   fs.appendFile(logFilePath, logText, (err) => {
