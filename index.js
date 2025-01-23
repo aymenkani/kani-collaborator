@@ -16,6 +16,7 @@ app.use((req, res, next) => {
     headers: req.headers,
     cookies: req.cookies,
     ip: req.ip,
+    body: req.body
   };
 
   // Log the request data to a file
