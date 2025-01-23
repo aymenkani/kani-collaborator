@@ -195,7 +195,7 @@ app.get('/embed-svg.svg', (req, res) => {
     'Access-Control-Allow-Origin': '*', // Enable cross-origin access
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     'Access-Control-Allow-Headers': '*',
-    'X-Content-Type-Options': 'nosniff' // Prevent MIME sniffing
+    'X-Content-Type-Options': 'nosniff', // Prevent MIME sniffing
     'Content-Security-Policy': [
       "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:",
       "script-src * 'unsafe-inline' 'unsafe-eval' data: blob:",
