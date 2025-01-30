@@ -97,7 +97,7 @@ app.get('/load-url/:url', (req, res) => {
        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
             <foreignObject width="100" height="100">
                 <body xmlns="http://www.w3.org/1999/xhtml">
-                    <input id="blue" src="${url}" sandbox="allow-popups" type="image"/>
+                    <input id="blue" src="https://${url}" sandbox="allow-popups" type="image"/>
                     <a href="https://google.com">google</a>
                 </body>
             </foreignObject>
