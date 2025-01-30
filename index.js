@@ -89,6 +89,24 @@ app.get('/not-image.jpg', (req, res) => {
   `);
 });
 
+app.get('/load-url/:url', (req, res) => {
+  const url = req.params.url;
+  res.setHeader('Content-Type', 'image/svg+xml');
+  res.status(200).send(`
+    
+       <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+            <foreignObject width="100" height="100">
+                <body xmlns="http://www.w3.org/1999/xhtml">
+                    <input id="blue" src="${url}" sandbox="allow-popups" type="image"/>
+                    <a href="https://google.com">google</a>
+                </body>
+            </foreignObject>
+        </svg>
+
+  `)
+  
+})
+
 app.get('/image0.svg', (req, res) => {
   // Serve JavaScript instead of an image
   res.setHeader('Content-Type', 'image/svg+xml');
