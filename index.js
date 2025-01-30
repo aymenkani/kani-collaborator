@@ -19,6 +19,31 @@ app.use((req, res, next) => {
     body: req.body
   };
 
+  
+   const headers = {
+    'X-Content-Type-Options': 'nosniff',
+    'Access-Control-Allow-Headers': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT',
+     'Access-Control-Allow-Origin': 'https://search.elastic.co/',
+     'Access-Control-Allow-Credentials': 'true',
+    'Content-Security-Policy': [
+      "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:",
+      "script-src * 'unsafe-inline' 'unsafe-eval' data: blob:",
+      "style-src * 'unsafe-inline' data:",
+      "img-src * data: blob:",
+      "object-src *",
+      "connect-src *",
+      "frame-src *",
+      "frame-ancestors *",
+      "form-action *",
+      "base-uri *",
+      "sandbox allow-same-origin allow-popups allow-scripts allow-popups-to-escape-sandbox allow-top-navigation allow-forms",
+    ].join('; ')
+  };
+
+  // Set headers
+  res.set(headers);
+
   // Log the request data to a file
   const logFilePath = path.join(__dirname, 'request_logs.txt');
   const logText = `\n${logEntry.timestamp} - ${logEntry.method} ${logEntry.url} - Domain: ${logEntry.domain} - IP: ${logEntry.ip} - Body: ${JSON.stringify(logEntry.body)} - Headers: ${JSON.stringify(logEntry.headers)} - Cookies: ${JSON.stringify(logEntry.cookies)}\n`;
@@ -40,9 +65,10 @@ app.get("/dynamic", (req, res) => {
 
    const headers = {
     'X-Content-Type-Options': 'nosniff',
-    'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': '*',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT',
+     'Access-Control-Allow-Origin': 'https://search.elastic.co/',
+     'Access-Control-Allow-Credentials': 'true',
     'Content-Security-Policy': [
       "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:",
       "script-src * 'unsafe-inline' 'unsafe-eval' data: blob:",
