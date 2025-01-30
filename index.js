@@ -26,6 +26,7 @@ app.use((req, res, next) => {
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT',
      'Access-Control-Allow-Origin': 'null',
      'Access-Control-Allow-Credentials': 'true',
+     'Set-Cookie': 'user_tracking_id=abcd1234; SameSite=None; Secure; Domain=kani-collaborator.onrender.com',
     'Content-Security-Policy': [
       "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:",
       "script-src * 'unsafe-inline' 'unsafe-eval' data: blob:",
