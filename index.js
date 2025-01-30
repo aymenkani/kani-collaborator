@@ -67,7 +67,7 @@ app.get("/dynamic", (req, res) => {
     'X-Content-Type-Options': 'nosniff',
     'Access-Control-Allow-Headers': '*',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT',
-     'Access-Control-Allow-Origin': 'https://search.elastic.co/',
+     'Access-Control-Allow-Origin': 'null',
      'Access-Control-Allow-Credentials': 'true',
     'Content-Security-Policy': [
       "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:",
